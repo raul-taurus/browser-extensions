@@ -8,6 +8,7 @@
 // @description:zh-TW  不需要透過第三方的服務就能下載 YouTube 影片。
 // @description:zh-CN  不需要透过第三方的服务就能下载 YouTube 影片。
 // @author       maple3142
+// @contributor  Raul
 // @match        https://*.youtube.com/*
 // @require      https://unpkg.com/vue@2.6.10/dist/vue.js
 // @require      https://unpkg.com/xfetch-js@0.3.4/xfetch.min.js
@@ -19,7 +20,7 @@
 // @license      MIT
 // ==/UserScript==
 
-;(function() {
+; (function () {
 	'use strict'
 	const DEBUG = true
 	const RESTORE_ORIGINAL_TITLE_FOR_CURRENT_VIDEO = true
@@ -106,14 +107,17 @@
 				const obj = {}
 				const document = {
 					createElement: () => obj,
-					head: { appendChild: () => {} }
+					head: { appendChild: () => { } }
 				}
 				eval(data)
 				data = obj.innerHTML
 			}
-			const fnnameresult = /\.set\([^,]*,encodeURIComponent\(([^(]*)\(/.exec(
-				data
-			)
+			let fnnameresult;
+			const fnnamePatterns = [/\b([a-zA-Z0-9$]{2})\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)/, /\.set\([^,]*,encodeURIComponent\(([^(]*)\(/];
+			for (const fnnamePattern of fnnamePatterns) {
+				fnnameresult = fnnamePattern.exec(data);
+				if (fnnameresult) break;
+			}
 			const fnname = fnnameresult[1]
 			const _argnamefnbodyresult = new RegExp(
 				escapeRegExp(fnname) + '=function\\((.+?)\\){(.+?)}'
@@ -267,7 +271,7 @@ self.onmessage=${workerMessageHandler}`
 	}
 
 	const ffWorker = FFmpeg.createWorker({
-		logger: DEBUG ? m => logger.log(m.message) : () => {}
+		logger: DEBUG ? m => logger.log(m.message) : () => { }
 	})
 	let ffWorkerLoaded = false
 	const mergeVideo = async (video, audio) => {
@@ -320,7 +324,7 @@ self.onmessage=${workerMessageHandler}`
 			'',
 			'Video Download',
 			`toolbar=no,height=${screen.height / 2},width=${screen.width /
-				2},left=${screenLeft},top=${screenTop}`
+			2},left=${screenLeft},top=${screenTop}`
 		)
 		const div = win.document.createElement('div')
 		win.document.body.appendChild(div)
@@ -425,7 +429,7 @@ self.onmessage=${workerMessageHandler}`
 			</div>
 			<div class="f-1 of-h">
 				<div class="t-center fs-14px" v-text="strings.adaptive"></div>
-				<a class="ytdl-link-btn fs-14px" target="_blank" v-for="vid in adaptive" :href="vid.url" :title="vid.type" v-text="[vid.qualityLabel,vid.mimeType].filter(x=>x).join(':')"></a>
+				<a class="ytdl-link-btn fs-14px" target="_blank" v-for="vid in adaptive" :href="vid.url" :title="vid.type" v-text="[vid.qualityLabel,vid.mimeType,(parseInt(vid.contentLength)/Math.pow(2,20)).toFixed(2) + ' MB'].filter(x=>x).join(' - ')"></a>
 			</div>
 		</div>
 		<div class="of-h t-center">
