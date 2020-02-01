@@ -425,7 +425,7 @@ self.onmessage=${workerMessageHandler}`
 		<div class="d-flex">
 			<div class="f-1 of-h">
 				<div class="t-center fs-14px" v-text="strings.stream"></div>
-				<a class="ytdl-link-btn fs-14px" target="_blank" v-for="vid in stream" :href="vid.url" :title="vid.type" v-text="vid.quality||vid.type"></a>
+				<a class="ytdl-link-btn fs-14px" target="_blank" v-for="vid in stream" :href="vid.url" :title="vid.type" v-text="[vid.qualityLabel,vid.mimeType,(parseInt(vid.contentLength)/Math.pow(2,20)).toFixed(2) + ' MB'].filter(x=>x).join(' - ')"></a>
 			</div>
 			<div class="f-1 of-h">
 				<div class="t-center fs-14px" v-text="strings.adaptive"></div>
