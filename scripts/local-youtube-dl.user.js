@@ -614,7 +614,7 @@ self.onmessage=${workerMessageHandler}`
 	border-radius: 3px;
 	text-decoration: none !important;
 	outline: 0;
-	text-align: center;
+	padding-left: 5px;
 	padding: 2px;
 	margin: 5px;
 	color: black;
