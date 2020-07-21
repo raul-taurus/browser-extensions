@@ -19,7 +19,7 @@
         let name = data.name.slice(0, -4);
         let vttTitle = `WEBVTT - ${name}`;
         let convertToCueTime = ms => new Date(parseInt(ms)).toJSON().substring(11, 23);
-        let cues = data.nls_trans.Sentences.map(l => `${convertToCueTime(l.BeginTime)} --> ${convertToCueTime(l.EndTime)}\n${l.Text}`).join("\n\n");
+        let cues = data.nls_trans.Sentences.map(l => `${convertToCueTime(l.BeginTime)} --> ${convertToCueTime(l.EndTime)} line:0\n${l.Text}`).join("\n\n");
         let vtt = `${vttTitle}\n\n${cues}`;
 
         let blob = new Blob([vtt], { type: "text/plain;charset=utf-8" });
