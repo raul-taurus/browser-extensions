@@ -20,11 +20,11 @@
         let vttTitle = `WEBVTT - ${name}`;
         let convertToCueTime = ms => new Date(parseInt(ms)).toJSON().substring(11, 23);
         let cues = data.nls_trans.Sentences.map(l => `${convertToCueTime(l.BeginTime)} --> ${convertToCueTime(l.EndTime)}\n${l.Text}`).join("\n\n");
-        let vvt = `${vttTitle}\n\n${cues}`;
+        let vtt = `${vttTitle}\n\n${cues}`;
 
-        let blob = new Blob([vvt], { type: "text/plain;charset=utf-8" });
+        let blob = new Blob([vtt], { type: "text/plain;charset=utf-8" });
         let a = document.createElement('a');
-        a.download = `${name}.vvt`;
+        a.download = `${name}.vtt`;
         a.rel = 'noopener';
         a.href = URL.createObjectURL(blob);
         setTimeout(function () { URL.revokeObjectURL(a.href) }, 4E4);
@@ -32,7 +32,7 @@
 
     }
 
-    function downloadVvt() {
+    function downloadVtt() {
         let btnSubtitle = queryTranscriptDownloadButton();
         if (btnSubtitle) {
             let subtitleLink = new URL(btnSubtitle.href);
@@ -45,7 +45,7 @@
         }
     }
 
-    function createVvtButton() {
+    function createVttButton() {
         const buttonId = "__USER_SCRIPT_WebVTT_BUTTON";
         if (document.getElementById(buttonId)) return;
 
@@ -55,15 +55,15 @@
         if (btnSubtitle) {
             console.log("Creating the [Download WebVTT] button...");
             let c = btnSubtitle.parentElement.parentElement.parentElement;
-            let vvtButton = document.createElement("button");
-            vvtButton.id = buttonId;
-            vvtButton.textContent = "Download WebVTT";
-            vvtButton.onclick = downloadVvt;
-            c.prepend(vvtButton);
+            let vttButton = document.createElement("button");
+            vttButton.id = buttonId;
+            vttButton.textContent = "Download WebVTT";
+            vttButton.onclick = downloadVtt;
+            c.prepend(vttButton);
             console.log("Created the [Download WebVTT] button...");
         }
     }
 
-    setInterval(createVvtButton, 1E3);
+    setInterval(createVttButton, 1E3);
 
 })();
